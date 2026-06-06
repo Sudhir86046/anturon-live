@@ -1,0 +1,14 @@
+[
+  {
+    "callId": "call_004",
+    "callerNumber": "+971500000000",
+    "agentId": "agent_001",
+    "status": "completed",
+    "inputAudio": "C:\\Users\\dell\\anturon-orchestrator\\audio\\uploads\\41437060cb3d1dd7838964cc83d1657d",
+    "startedAt": "2026-06-06T19:43:48.376Z",
+    "transcript": "Hello co founder sir",
+    "responseText": "Hello sir, how can I help you today?",
+    "outputAudio": "C:\\Users\\dell\\anturon-orchestrator\\audio\\output\\response-1780775038144.mp3",
+    "endedAt": "2026-06-06T19:43:58.151Z"
+  }
+]

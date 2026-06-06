@@ -1,0 +1,12 @@
+[
+  {
+    "id": "agent_1780776365127",
+    "name": "Dubai Real Estate Agent",
+    "systemPrompt": "You are a Dubai real estate phone assistant. Answer shortly and ask one question at a time.",
+    "language": "en",
+    "sttProvider": "deepgram",
+    "llmProvider": "sarvam",
+    "ttsProvider": "deepgram",
+    "createdAt": "2026-06-06T20:06:05.127Z"
+  }
+]

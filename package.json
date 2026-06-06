@@ -1,0 +1,29 @@
+{
+  "name": "anturon-orchestrator",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start:orchestrator": "ts-node apps/orchestrator/src/server.ts",
+    "test:orchestrator": "ts-node apps/orchestrator/src/main.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@deepgram/sdk": "^5.4.0",
+    "axios": "^1.17.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "multer": "^2.0.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/multer": "^2.0.0",
+    "@types/node": "^25.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
