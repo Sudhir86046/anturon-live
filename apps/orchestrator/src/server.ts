@@ -787,7 +787,103 @@ app.get("/agents/:id", async (req, res) => {
     });
   }
 });
+app.post("/agents/:agentId/telephony/config", async (req, res) => {
+  try {
+    const agentId = String(req.params.agentId);
 
+    const {
+      provider,
+      accountSid,
+      authToken,
+      phoneNumber,
+      sipUsername,
+      sipPassword,
+      sipDomain,
+      status,
+    } = req.body;
+
+    if (!provider) {
+      return res.status(400).json({
+        success: false,
+        error: "provider is required",
+      });
+    }
+
+    const agent = await agentService.findById(agentId);
+
+    if (!agent) {
+      return res.status(404).json({
+        success: false,
+        error: "Agent not found",
+      });
+    }
+
+    const existing = await prisma.telephonyConfig.findFirst({
+      where: { agentId, provider },
+    });
+
+    const config = existing
+      ? await prisma.telephonyConfig.update({
+          where: { id: existing.id },
+          data: {
+            accountSid,
+            authToken,
+            phoneNumber,
+            sipUsername,
+            sipPassword,
+            sipDomain,
+            status: status || "inactive",
+          },
+        })
+      : await prisma.telephonyConfig.create({
+          data: {
+            id: `tel_${Date.now()}`,
+            agentId,
+            provider,
+            accountSid,
+            authToken,
+            phoneNumber,
+            sipUsername,
+            sipPassword,
+            sipDomain,
+            status: status || "inactive",
+          },
+        });
+
+    return res.json({
+      success: true,
+      config,
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+});
+
+app.get("/agents/:agentId/telephony/config", async (req, res) => {
+  try {
+    const agentId = String(req.params.agentId);
+
+    const configs = await prisma.telephonyConfig.findMany({
+      where: { agentId },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return res.json({
+      success: true,
+      configs,
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+});
 app.use((req, res) => {
   return res.status(404).json({
     success: false,

@@ -17,10 +17,12 @@ model Agent {
   ttsProvider  String   @default("deepgram")
   createdAt    DateTime @default(now())
 
-  calls      Call[]
-  knowledge  Knowledge[]
-  campaigns  Campaign[]
+  calls            Call[]
+  knowledge        Knowledge[]
+  campaigns        Campaign[]
+  telephonyConfigs TelephonyConfig[]
 }
+
 model KnowledgeChunk {
   id          String   @id
   knowledgeId String
@@ -29,6 +31,7 @@ model KnowledgeChunk {
   chunkIndex  Int
   createdAt   DateTime @default(now())
 }
+
 model Call {
   id           String   @id @default(cuid())
   callId       String
@@ -81,6 +84,7 @@ model Campaign {
 
   agent Agent @relation(fields: [agentId], references: [id])
 }
+
 model KnowledgeQuery {
   id        String   @id
   agentId   String
@@ -88,4 +92,21 @@ model KnowledgeQuery {
   context   String?
   answer    String?
   createdAt DateTime @default(now())
+}
+
+model TelephonyConfig {
+  id          String   @id
+  agentId     String
+  provider    String
+  accountSid  String?
+  authToken   String?
+  phoneNumber String?
+  sipUsername String?
+  sipPassword String?
+  sipDomain   String?
+  status      String   @default("inactive")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  agent Agent @relation(fields: [agentId], references: [id])
 }
