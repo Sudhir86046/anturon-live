@@ -884,6 +884,84 @@ app.get("/agents/:agentId/telephony/config", async (req, res) => {
     });
   }
 });
+app.post("/agents/:agentId/web-call/message", async (req, res) => {
+  try {
+    const agentId = String(req.params.agentId);
+    const { message } = req.body;
+
+    if (!message) {
+      return res.status(400).json({
+        success: false,
+        error: "message is required",
+      });
+    }
+
+    const agent = await agentService.findById(agentId);
+
+    if (!agent) {
+      return res.status(404).json({
+        success: false,
+        error: "Agent not found",
+      });
+    }
+
+    const knowledgeContext = await knowledgeService.getAgentContext(
+      agentId,
+      message
+    );
+
+    const { SarvamProvider } = await import("./providers/llm/sarvam-provider");
+    const llm = new SarvamProvider();
+
+    const systemPrompt = `
+You are a web call testing voice agent.
+
+Agent Prompt:
+${agent.systemPrompt}
+
+Knowledge Base Context:
+${knowledgeContext || "No relevant knowledge base context found."}
+
+Rules:
+- Answer only from knowledge base when available.
+- Keep answer short.
+- Ask one question at a time.
+- Do not mention provider names.
+`.trim();
+
+    const answer = await llm.generate(systemPrompt, message);
+
+    const tts = new DeepgramTTSProvider();
+    const audio = await tts.synthesize(answer);
+
+    const audioUrl = `/audio/output/${path.basename(audio.outputPath)}`;
+
+    await prisma.knowledgeQuery.create({
+      data: {
+        id: `kq_${Date.now()}`,
+        agentId,
+        question: message,
+        context: knowledgeContext,
+        answer,
+      },
+    });
+
+    return res.json({
+      success: true,
+      mode: "web-call-test",
+      agentId,
+      transcript: message,
+      answer,
+      audioUrl,
+      audioPath: audio.outputPath,
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+});
 app.use((req, res) => {
   return res.status(404).json({
     success: false,
