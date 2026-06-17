@@ -4,6 +4,7 @@ import { Campaign, CampaignLead } from "./campaign-types";
 import { CampaignStore } from "../storage/campaign-store";
 import { CallController } from "../calls/call-controller";
 import { TwilioProvider } from "../providers/telephony/twilio-provider";
+import { prisma } from "../db/prisma";
 
 const store = new CampaignStore();
 const callController = new CallController();
@@ -11,6 +12,24 @@ const callController = new CallController();
 export class CampaignService {
   private sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  private async requireActiveTelephony(agentId: string) {
+    const config = await prisma.telephonyConfig.findFirst({
+      where: {
+        agentId,
+        status: "active",
+      },
+      orderBy: {
+        updatedAt: "desc",
+      },
+    });
+    if (!config) {
+      throw new Error(
+        "Please connect and activate a telephony provider before starting campaign."
+      );
+    }
+    return config;
   }
 
   private hasTwilioConfig() {
@@ -111,6 +130,8 @@ export class CampaignService {
       throw new Error("Campaign is already running");
     }
 
+    await this.requireActiveTelephony(campaign.agentId);
+
     campaign.status = "running";
     campaign.startedAt = campaign.startedAt || new Date().toISOString();
 
@@ -200,6 +221,8 @@ export class CampaignService {
     if (!campaign) {
       throw new Error("Campaign not found");
     }
+
+    await this.requireActiveTelephony(campaign.agentId);
 
     const maxRetries = campaign.maxRetries || 3;
 
