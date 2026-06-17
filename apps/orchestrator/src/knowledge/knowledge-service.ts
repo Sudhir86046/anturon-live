@@ -84,15 +84,40 @@ export class KnowledgeService {
     };
   }
 
-  async getAgentContext(agentId: string, query: string) {
+    async getAgentContext(agentId: string, query: string) {
+    const stopWords = new Set([
+      "what",
+      "which",
+      "when",
+      "where",
+      "does",
+      "your",
+      "you",
+      "are",
+      "the",
+      "and",
+      "for",
+      "with",
+      "from",
+      "this",
+      "that",
+      "have",
+      "provide",
+      "provides",
+      "service",
+      "services",
+    ]);
+
     const words = query
       .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, " ")
       .split(/\s+/)
-      .filter((word) => word.length > 3);
+      .map((word) => word.trim())
+      .filter((word) => word.length > 2 && !stopWords.has(word));
 
     const chunks = await prisma.knowledgeChunk.findMany({
       where: { agentId },
-      take: 100,
+      take: 300,
       orderBy: { createdAt: "desc" },
     });
 
@@ -101,10 +126,26 @@ export class KnowledgeService {
     const scored = chunks
       .map((chunk) => {
         const content = chunk.content.toLowerCase();
-        const score = words.reduce(
-          (total, word) => total + (content.includes(word) ? 1 : 0),
-          0
-        );
+
+        let score = 0;
+
+        for (const word of words) {
+          if (content.includes(word)) score += 3;
+        }
+
+        if (content.includes(query.toLowerCase())) score += 10;
+
+        // Prefer chunks that look like company/service/FAQ content.
+        if (
+          content.includes("provide") ||
+          content.includes("service") ||
+          content.includes("support") ||
+          content.includes("business hours") ||
+          content.includes("pricing") ||
+          content.includes("appointment")
+        ) {
+          score += 2;
+        }
 
         return {
           content: chunk.content,
@@ -115,13 +156,13 @@ export class KnowledgeService {
 
     const best = scored.filter((item) => item.score > 0).slice(0, 5);
 
-    if (!best.length) {
-      return scored.slice(0, 3).map((item) => item.content).join("\n\n");
-    }
+    const selected = best.length ? best : scored.slice(0, 3);
 
-    return best.map((item) => item.content).join("\n\n");
+    return selected
+      .map((item) => item.content)
+      .join("\n\n")
+      .slice(0, 2500);
   }
-
   async list(agentId: string) {
     return await store.list(agentId);
   }

@@ -81,3 +81,11 @@ model Campaign {
 
   agent Agent @relation(fields: [agentId], references: [id])
 }
+model KnowledgeQuery {
+  id        String   @id
+  agentId   String
+  question  String
+  context   String?
+  answer    String?
+  createdAt DateTime @default(now())
+}

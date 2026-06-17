@@ -6,13 +6,13 @@ export class SarvamProvider {
     const finalSystemPrompt = `
 ${systemPrompt}
 
-CRITICAL RULES:
-- Return ONLY the final answer.
-- Do NOT show reasoning.
-- Do NOT think step by step.
-- Do NOT explain.
-- Maximum 20 words.
-- For greeting, directly answer with the instructed greeting.
+IMPORTANT OUTPUT RULES:
+- Answer only from the provided knowledge/context.
+- Do not invent anything.
+- Do not show reasoning.
+- Return final answer only.
+- Keep answer short and clear.
+- Start final answer directly, without bullets unless needed.
 `.trim();
 
     const response = await axios.post(
@@ -31,7 +31,7 @@ CRITICAL RULES:
         model: "sarvam-30b",
         temperature: 0,
         top_p: 1,
-        max_tokens: 80,
+        max_tokens: 1000,
       },
       {
         headers: {
@@ -41,15 +41,17 @@ CRITICAL RULES:
       }
     );
 
-    const message = response.data?.choices?.[0]?.message;
-    const finishReason = response.data?.choices?.[0]?.finish_reason;
+    const choice = response.data?.choices?.[0];
+    const message = choice?.message;
 
-    console.log("SARVAM FINISH:", finishReason);
+    console.log("SARVAM FINISH:", choice?.finish_reason);
 
-    if (message?.content) {
+    if (message?.content && typeof message.content === "string") {
       return message.content.trim();
     }
 
-    return "Hello sir, are you looking to buy, rent, or sell a property in Dubai?";
+    console.log("SARVAM RAW:", JSON.stringify(response.data, null, 2));
+
+    return "Sorry, I could not generate a proper answer from the knowledge base.";
   }
 }

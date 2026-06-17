@@ -7,9 +7,10 @@
     "strict": false,
     "skipLibCheck": true,
     "types": ["node"],
-    "baseUrl": ".",
-    "paths": {
-      "@prisma-generated/*": ["generated/prisma/*"]
-    }
-  }
+    "rootDir": ".",
+    "outDir": "dist",
+    "resolveJsonModule": true
+  },
+  "include": ["apps/**/*.ts", "prisma/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }
