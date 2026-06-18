@@ -693,6 +693,10 @@ STRICT RULES:
     const tts = new DeepgramTTSProvider();
     const audio = await tts.synthesize(answer);
     const audioFileName = audio.outputPath.split("\\").pop();
+
+    const publicBaseUrl = process.env.PUBLIC_BASE_URL || "http://35.168.16.223";
+    const audioUrl = `${publicBaseUrl}/audio/output/${path.basename(audio.outputPath)}`;
+
     await prisma.knowledgeQuery.create({
   data: {
     id: `kq_${Date.now()}`,
@@ -710,6 +714,7 @@ return res.json({
   answer,
   audioFile: audioFileName,
   audioPath: audio.outputPath,
+  audioUrl,
 });
   } catch (error: any) {
     return res.status(500).json({
@@ -934,7 +939,8 @@ Rules:
     const tts = new DeepgramTTSProvider();
     const audio = await tts.synthesize(answer);
 
-    const audioUrl = `/audio/output/${path.basename(audio.outputPath)}`;
+    const publicBaseUrl = process.env.PUBLIC_BASE_URL || "http://35.168.16.223";
+    const audioUrl = `${publicBaseUrl}/audio/output/${path.basename(audio.outputPath)}`;
 
     await prisma.knowledgeQuery.create({
       data: {
