@@ -3,55 +3,56 @@ import { env } from "../../config/env";
 
 export class SarvamProvider {
   async generate(systemPrompt: string, userMessage: string): Promise<string> {
-    const finalSystemPrompt = `
+    try {
+      const finalSystemPrompt = `
 ${systemPrompt}
 
-IMPORTANT OUTPUT RULES:
-- Answer only from the provided knowledge/context.
-- Do not invent anything.
-- Do not show reasoning.
-- Return final answer only.
-- Keep answer short and clear.
-- Start final answer directly, without bullets unless needed.
+RAG ANSWER MODE:
+- Use Agent/System Prompt and Uploaded Knowledge Context as the source.
+- The context may be fragmented because it comes from PDF chunks.
+- Combine related chunks and create a proper helpful answer.
+- You may explain, summarize, expand, and simplify the topic when the topic is clearly present in the context.
+- Do NOT answer unrelated questions outside the agent prompt or uploaded knowledge.
+- If there is no related topic in prompt/context, say:
+"Sorry, I don't have that information in my current knowledge base."
+- Do not say "not present" when the topic or related terms are present in context.
+- Keep voice-call answers short: 2 to 4 sentences.
+- Reply in the same language as the user.
+- Return only the final answer.
 `.trim();
 
-    const response = await axios.post(
-      "https://api.sarvam.ai/v1/chat/completions",
-      {
-        messages: [
-          {
-            role: "system",
-            content: finalSystemPrompt,
-          },
-          {
-            role: "user",
-            content: userMessage,
-          },
-        ],
-        model: "sarvam-30b",
-        temperature: 0,
-        top_p: 1,
-        max_tokens: 1000,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${env.sarvamApiKey}`,
-          "Content-Type": "application/json",
+      const response = await axios.post(
+        "https://api.sarvam.ai/v1/chat/completions",
+        {
+          model: "sarvam-30b",
+          messages: [
+            { role: "system", content: finalSystemPrompt },
+            { role: "user", content: userMessage },
+          ],
+          temperature: 0.35,
+          top_p: 1,
+          max_tokens: 450,
         },
+        {
+          headers: {
+            Authorization: `Bearer ${env.sarvamApiKey}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("SARVAM RAW:", JSON.stringify(response.data, null, 2));
+
+      const content = response.data?.choices?.[0]?.message?.content;
+
+      if (typeof content === "string" && content.trim()) {
+        return content.trim();
       }
-    );
 
-    const choice = response.data?.choices?.[0];
-    const message = choice?.message;
-
-    console.log("SARVAM FINISH:", choice?.finish_reason);
-
-    if (message?.content && typeof message.content === "string") {
-      return message.content.trim();
+      return "Sorry, I don't have that information in my current knowledge base.";
+    } catch (error: any) {
+      console.error("SARVAM ERROR:", error.response?.data || error.message);
+      return "Sorry, I don't have that information in my current knowledge base.";
     }
-
-    console.log("SARVAM RAW:", JSON.stringify(response.data, null, 2));
-
-    return "Sorry, I could not generate a proper answer from the knowledge base.";
   }
 }

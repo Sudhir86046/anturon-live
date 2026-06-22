@@ -19,18 +19,19 @@ export class CallStore {
     });
   }
 
-  async list(): Promise<CallSession[]> {
+  async list(): Promise<any[]> {
     const calls = await prisma.call.findMany({
-      orderBy: {
-        startedAt: "desc",
-      },
+      include: { agent: true },
+      orderBy: { startedAt: "desc" },
     });
 
     return calls.map((call) => ({
+      id: call.id,
       callId: call.callId,
       callerNumber: call.callerNumber || undefined,
       agentId: call.agentId || undefined,
-      status: call.status as CallSession["status"],
+      agent: call.agent ? { id: call.agent.id, name: call.agent.name } : undefined,
+      status: call.status,
       inputAudio: call.inputAudio || undefined,
       transcript: call.transcript || undefined,
       responseText: call.responseText || undefined,

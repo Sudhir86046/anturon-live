@@ -1,0 +1,52 @@
+
+
+SUDHIR KUMAR TIWARI 
++91-8604677291 | sudhirtiwari003@gmail.com | LinkedIn 
+Raja ji Puram, Lucknow, Uttar Pradesh, India 
+ 
+PROFESSIONAL SUMMARY 
+Dynamic and results-driven software developer with a solid foundation in web development and database 
+management. Skilled in building responsive applications using HTML, CSS, JavaScript, and MySQL. Proven problem-
+solving expertise through competitive programming and hands-on experience with C++ data structures and 
+algorithms. Proficient in DBMS concepts with practical MySQL management skills. Passionate about crafting 
+innovative solutions with analytical precision. Seeking entry-level roles and internships to apply technical 
+expertise and drive impactful projects in Architectural designs for full-stack applications encompassing both 
+Mobile and Android platforms. 
+KEY COMPETENCIES 
+Web Development: HTML, CSS, JavaScript, React, MySQL 
+C++ Data Structures & Algorithms: Competitive Programming, Problem Solving, LeetCode Practice 
+Database Management: MySQL, DBMS Concepts 
+Python: Basic Knowledge 
+Mobile Development: Familiar with Java and Objective C 
+PROFESSIONAL EXPERIENCE 
+Front-End Developer - NGO Web Front Page (March 2024 – May 2024) 
+• Created front page based on team inputs utilizing effective designing techniques 
+• Received certificate, letter of recommendation, and work experience proof 
+Web Development Industrial Training (October 2023 – December 2023) 
+• Gained hands-on experience in full-stack web development practices, focusing on protocol design for seamless 
+syncing between server and client applications 
+• Developed foundational skills and industry insights 
+EDUCATION 
+B.E in Computer Science & Engineering, Babu Banarasi Das Engineering College (2022–2026) 
+• Average SGPA: 6.07 
+Intermediate (U.P. Board) – Lilawati Devi Science Intermediate College (2020–2022) 
+• Percentage: 71% 
+Matriculation (U.P. Board) – Lilawati Devi Science Intermediate College (2018–2020) 
+• Percentage: 76.5% 
+CERTIFICATES & HACKATHONS 
+• Participated in coding contest – GeeksforGeeks 
+• Participated in web development quiz – Btech Wallah 
+• Industrial Training Certificate – Web Development 
+• Data Science & Analytics Certificate – HP Life 
+
+PROJECTS 
+Minor Project: Bank Management System in C++ 
+• Admin & User authentication 
+• Account management (create, delete, search) 
+• Deposit & Withdraw with transaction logging 
+• PIN management + Interest computation 
+• File-based storage system for data management 
+Major Project: Unified Social App 
+• Combines features from WhatsApp, Instagram, Facebook, and Snapchat 
+• Full-stack development using React, Django, Erlang, C++, Kotlin, Swift (working project), incorporating live 
+streaming capabilities and chat features to enhance user interaction 

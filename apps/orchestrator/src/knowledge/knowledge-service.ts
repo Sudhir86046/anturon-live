@@ -7,7 +7,7 @@ import { prisma } from "../db/prisma";
 
 const store = new KnowledgeStore();
 
-function chunkText(text: string, size = 700): string[] {
+function chunkText(text: string, size = 1200): string[] {
   const clean = text.replace(/\s+/g, " ").trim();
   const chunks: string[] = [];
 
@@ -84,68 +84,68 @@ export class KnowledgeService {
     };
   }
 
-    async getAgentContext(agentId: string, query: string) {
+  async getAgentContext(agentId: string, query: string) {
+    const chunks = await prisma.knowledgeChunk.findMany({
+      where: { agentId },
+      take: 200,
+      orderBy: { createdAt: "desc" },
+    });
+
+    if (!chunks.length) return "";
+
     const stopWords = new Set([
-      "what",
-      "which",
-      "when",
-      "where",
-      "does",
-      "your",
-      "you",
-      "are",
-      "the",
-      "and",
-      "for",
-      "with",
-      "from",
-      "this",
-      "that",
-      "have",
-      "provide",
-      "provides",
-      "service",
-      "services",
+      "what", "which", "when", "where", "does", "your", "you", "are",
+      "the", "and", "for", "with", "from", "this", "that", "have",
+      "provide", "provides", "service", "services", "can", "could",
+      "please", "tell", "about", "explain", "topic", "know", "want",
     ]);
 
     const words = query
       .toLowerCase()
       .replace(/[^a-z0-9\s]/g, " ")
       .split(/\s+/)
-      .map((word) => word.trim())
-      .filter((word) => word.length > 2 && !stopWords.has(word));
+      .map((w) => w.trim())
+      .filter((w) => w.length > 2 && !stopWords.has(w));
 
-    const chunks = await prisma.knowledgeChunk.findMany({
-      where: { agentId },
-      take: 300,
-      orderBy: { createdAt: "desc" },
-    });
-
-    if (!chunks.length) return "";
+    const importantHints = [
+      "dbms",
+      "database",
+      "normalization",
+      "sql",
+      "transaction",
+      "entity",
+      "relationship",
+      "primary",
+      "foreign",
+      "key",
+      "schema",
+      "table",
+      "query",
+    ];
 
     const scored = chunks
       .map((chunk) => {
         const content = chunk.content.toLowerCase();
-
         let score = 0;
+        const tokens = content.split(/\s+/).slice(0, 250);
 
         for (const word of words) {
-          if (content.includes(word)) score += 3;
+          if (content.includes(word)) score += 5;
+
+          // loose matching for speech-to-text mistakes
+          const prefix = word.slice(0, 4);
+          for (const token of tokens) {
+            if (token.startsWith(prefix)) score += 1;
+          }
         }
 
-        if (content.includes(query.toLowerCase())) score += 10;
-
-        // Prefer chunks that look like company/service/FAQ content.
-        if (
-          content.includes("provide") ||
-          content.includes("service") ||
-          content.includes("support") ||
-          content.includes("business hours") ||
-          content.includes("pricing") ||
-          content.includes("appointment")
-        ) {
-          score += 2;
+        for (const hint of importantHints) {
+          if (query.toLowerCase().includes(hint) && content.includes(hint)) {
+            score += 10;
+          }
         }
+
+        if (content.includes(query.toLowerCase())) score += 20;
 
         return {
           content: chunk.content,
@@ -154,14 +154,15 @@ export class KnowledgeService {
       })
       .sort((a, b) => b.score - a.score);
 
-    const best = scored.filter((item) => item.score > 0).slice(0, 5);
+    const best = scored.filter((x) => x.score > 0).slice(0, 6);
 
-    const selected = best.length ? best : scored.slice(0, 3);
+    // Important: fallback latest chunks so agent can still use uploaded docs
+    const selected = best.length ? best : scored.slice(0, 6);
 
     return selected
-      .map((item) => item.content)
+      .map((item, index) => `Context ${index + 1}:\n${item.content}`)
       .join("\n\n")
-      .slice(0, 2500);
+      .slice(0, 4500);
   }
   async list(agentId: string) {
     return await store.list(agentId);

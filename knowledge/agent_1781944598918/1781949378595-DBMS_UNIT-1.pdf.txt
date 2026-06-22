@@ -1,0 +1,1127 @@
+
+
+Curriculum & Evaluation Scheme: Computer Engineering and Information Technology,  
+Computer Science and Information Technology, IT (V & VI semester) 
+4 
+ 
+B.TECH (Computer Engineering and Information Technology ,  Computer Science and 
+Information Technology, Information Technology) FIFTH SEMSTER SYLLABUS 
+ 
+Database Management System (BCS501) 
+Course Outcome ( CO) Bloom’s Knowledge Level (KL) 
+At the end of course , the student will be able to: 
+CO 1 
+Apply knowledge of database for real life applications. 
+K
+3 
+CO 2 
+Apply query processing techniques to automate the real time problems of databases. 
+K
+3
+, K
+4 
+CO 3 
+Identify and solve the redundancy problem in database tables using normalization. 
+K
+2
+, K
+3 
+CO 4 
+Understand the concepts of transactions, their processing so they will familiar with broad range 
+of database management issues including data integrity, security and recovery. 
+K
+2
+, K
+4 
+CO 5 
+Design, develop and implement a small database project using database tools. 
+K
+3
+, K
+6 
+DETAILED SYLLABUS 3-1-0 
+Unit Topic Proposed 
+Lecture 
+ 
+ 
+I 
+Introduction: Overview, Database System vs File System, Database System Concept and 
+Architecture,  Data  Model  Schema  and  Instances,  Data  Independence  and  Database  Language  and 
+Interfaces, Data Definitions Language, DML, Overall Database Structure. Data Modeling Using the 
+Entity  Relationship  Model:  ER  Model  Concepts,  Notation  for  ER  Diagram,  Mapping  Constraints, 
+Keys, Concepts of Super Key, Candidate Key, Primary Key, Generalization, Aggregation, 
+Reduction of an ER Diagrams to Tables, Extended ER Model, Relationship of Higher Degree. 
+ 
+ 
+08 
+ 
+ 
+ 
+II 
+Relational  data  Model  and  Language: Relational  Data  Model  Concepts,  Integrity  Constraints, 
+Entity  Integrity,  Referential  Integrity,  Keys  Constraints,  Domain  Constraints,  Relational  Algebra, 
+Relational  Calculus,  Tuple  and  Domain  Calculus.  Introduction  on  SQL:  Characteristics  of  SQL, 
+Advantage of SQL. SQl Data Type and Literals. Types of SQL Commands. SQL Operators and Their 
+Procedure.  Tables,  Views  and  Indexes.  Queries  and  Sub  Queries.  Aggregate Functions.  Insert, 
+Update and Delete Operations, Joins, Unions, Intersection, Minus, Cursors, Triggers, 
+Procedures in SQL/PL SQL 
+ 
+ 
+ 
+08 
+ 
+III 
+Data Base Design & Normalization: Functional dependencies, normal forms, first, second, 8 third 
+normal forms, BCNF, inclusion dependence, loss less join decompositions, normalization using 
+FD, MVD, and JDs, alternative approaches to database design 
+ 
+08 
+ 
+IV 
+Transaction Processing Concept: Transaction System, Testing of Serializability, Serializability of 
+Schedules,  Conflict  &  View  Serializable Schedule,  Recoverability,  Recovery  from  Transaction 
+Failures, Log Based Recovery, Checkpoints, Deadlock Handling. Distributed Database: Distributed 
+Data Storage, Concurrency Control, Directory System. 
+ 
+08 
+ 
+V 
+Concurrency Control Techniques: Concurrency Control, Locking Techniques for Concurrency 
+Control, Time Stamping Protocols for Concurrency Control, Validation Based Protocol, Multiple 
+Granularity, Multi Version Schemes, Recovery with Concurrent Transaction, Case Study of Oracle. 
+ 
+08 
+Text books: 
+1. Korth, Silbertz, Sudarshan,” Database Concepts”, McGraw Hill 
+2. Date C J, “An Introduction to Database Systems”, Addision Wesley 
+3. Elmasri, Navathe, “ Fundamentals of Database Systems”, Addision Wesley 
+4. O’Neil, Databases, Elsevier Pub. 
+5. RAMAKRISHNAN"Database Management Systems",McGraw Hill 
+6. Leon & Leon,”Database Management Systems”, Vikas Publishing House 
+7. Bipin C. Desai, “ An Introduction to Database Systems”, Gagotia Publications 
+8. Majumdar & Bhattacharya, “Database Management System”, TMH 
+
+Rot 
+DBMS 
+Dab base 
+RDBMS) 
+R 
+" Collethn of Relate d Data 
+Stucted 
+IRCTC 
+Data base 
+Univity 
+" 
+Stored 
+n 
+a 
+pahulr 
+Structne 
+Database Managtment Syswm 
+Relaional DBns 
+in the tabie fomat 
+StructuTed Date h Stod 
+Unstucturtd 
+UNI T-01 
+Database Syskm 
+’ 
+The 
+most 
+preralent 
+Dems essentially 
+and 
+-twebpaes 
+chats, t ) 
+Stuctw 
+Definiien 
+(Hot a prtde fmed shructue) 
+n a dàaabase 
+DBMS 
+A database 
+protk) 
+data 
+Cotle on 
+O Perrahions 
+SaL Server 
+My SeL 
+Orade (9,I), 12e ete resima 
+’A DBMS maes it posSible for end users to 
+Insert on 
+databa ses 
+Updaiom 
+managet S,stm (peM5) 
+read ,wpdate and delete data 
+applfca 
+n 
+protan, 
+ensurtng 
+Consis 
+tety 
+ordanized 
+and 
+emains 
+mmaament 
+platform, 
+tnteface bten database, 
+that d ata i 
+the 
+accessible. 
+
+Hle 
+System 
+Vs 
+DR8Ms 
+’ 
+Bfore 
+DBMS, 
+file 
+[ystenn 
+was 
+ysed. 
+5lk 
+Syste 
+ip 
+în 
+built 
+into 
+thf 
+Commn ntspee 
+its daa ; im the fle tormat 
+hat allqs ises to shae sles pontrs 
+nd 
+other 
+Souees oves a 
+netu 
+Hetso 
+tk 
+fle Sy 
+sternm_ 
+disth 
+bue 
+d 
+1e 
+Systemy 
+potos 
+duback 
+Nokel-Sk syshm îp weseing property hen ohatis the use se MS 
+LKB data 
+Easy stachin? 
+means my data i lseated Centalized an users 
+oporaini sys kem 
+using 
+Client 
+Server 
+Arhitetut 
+it 
+data 
+devloped by Sn mievo syshm 
+(in 1984 
+(MyDaa 
+SERVAR 
+from aiftent 
+
+tme. 
+Mulhpe 
+acessing frm dittent perple atsa 
+arailable 
+th l 
+Syst, 
+it 
+mean 
+7he 
+at 
+Same 
+tmme 
+, 
+then 
+dara 
+inconsisteney 
+ocud. 
+Butfor DeMS potoest ests i 
+9 
+Seriy 
+Role 
+based 
+seutty 
+:-
+Rest 
+dah 
+is 
+niSSble 
+to 
+unattnse 
+Redun 
+dany 
+i 
+(bupitacy 
+g 
+data) 
+Studen 
+Da 
+means 
+if 
+ml 
+Hple 
+people 
+Role based AeLecs (omtro 
+n Dms uniae data ts Stoed 
+ole based 
+Muhple fle ith ditent names but Comtt at Zame 
+But frn Dgms,thetat so may cmstrints ki prim key 
+
+epts and Arhitecture of DB MS 
+2-Trer (laqer) 
+Clienti 
+2 
+tier 
+amd 
+3 
+tier 
+Artiectunt 
+) 
+Process 
+Database Serve 
+2Ties 
+ArhGtetane 
+iz 
+Consiss 
+of 
+to 
+layers 
+) 
+Ui 
+nt 
+Applteatn 
+Uint-Sve 
+tndel. 
+Dabbase Sees 
+Hrst esbli shed the Connem 
+Reqet-Resyon ce 
+Request 
+has 
+beem 
+drne 
+fm 
+liintAppliatim 
+AppltaSm 
+Seye 
+àLles 
+s 
+te 
+dahbae. 
+3-Ter (Layer) 
+Data 
+Source 
+client 
+macine 
+and 
+Serner 
+both 
+aeode 
+the 
+omei 
+betn 
+Applthon 
+r 
+dientlayer nd bta leye 
+C3 
+cltent layer 
+Buiness ler 
+ientMaehine 
+Busines5 layr suppnt al mterfoces, 
+nd 
+thi 
+requst 
+has 
+heen 
+proessedn 3 
+Tier 
+arthitere 
+toad 
+f 
+cle 
+Sever bnd. 
++In 
+2-Tier 
+Ardhte 
+tune 
+User 
+diety 
+diety 
+forwrded 
+to 
+data 
+layer 
+Applitatin Server 
+proressed 
+and 
+foid itt 
+dah 
+lyer 
+’ 
+Them 
+dea 
+îg 
+nttiered 
+to 
+cliet 
+maline 
+|Note-3-T tetue is maeh Sew 
+archetue be Cause 
+4ser 
+i 
+mot 
+in 
+diet 
+access 
+to 
+da 
+
+t Data Model sehema And InstanEB 
+L Shema -
+G-o RDBMS 
+Ly Jhe overal 
+(2) 
+E-R 
+Model 
+Data 
+i 
+e 
+tSented 
+n 
+te 
+Styden 
+Course 
+Logical 
+Repnsentam 
+ot 
+bat 
+modelir 
+the 
+shema 
+Studet 
+Course 
+Rollno. Hame 
+Cid 
+Resn 
+of 
+data 
+psented 
+n 
+tthe 
+table format 
+d ata ba se he 
+Gntty hd Relasm. 
+desig ofa datba ge is cale d sehem 
++A 
+daabase 
+shema 
+î 
+th 
+Skeleon 
+shuctur 
+otte 
+databage. 
+t 
+p 
+Semts 
+Ht 
+A 
+Shema 
+Contains 
+shen 
+/ 
+ta bie 
+Create table Studemt 
+es 
+ofte 
+entire 
+database 
+dab tpes et. 
+Marne ofthe 
+table 
+Addesses 
+buraton 
+hp poromm ohose 
+obts 
+Giue 
+table, 
+piy 
+vey, 
+fontigm 
+dahtye s) 
+The 
+da 
+base 
+shema 
+Con be 
+eptgeded 
+b 
+zm Cotumn 
+Roll 
+no. 
+int 
+1°), 
+Name 
+varhr 
+Ad dess Varchr 
+The 
+diaram 
+sehs 
+tne 
+darabase 
+objets nd 
+relainsh 
+p 
+witn 
+tach ther, 
+(20), 
+desgner to 
+Softo will ftere wth the 
+rolesS 
+of 
+darabase 
+Cyeahfon 
+i 
+Cled 
+dabase 
+the dakbase 
+
+The daa hih fo stortd fin the datebase at a 
+G 
+In 
+tthe 
+dahbase, 
+ahuel 
+data 
+Studen 
+in 
+the 
+tudemt 
+table 
+o ime added 
+nstan ct-Occuremtt 
+Dah Tndependemce 
+ab:lt 
+attoing 
+Called 
+Sehema 
+lerel 
+Sehena 
+Jerl 
+Reor) 
+Shema 
+STUPEHT 
+2 
+9Am 
+a 6hema de sniim n one 
+PPP 
+Suppose you ant 
+defnion in the mest hiher Jed i 
+of an erent, which upded tne da bae 
+Hhe at 
+Sher 1eel 
+BRANCH| EAR 
+CSE 
+ECE 
+parbuler 
+the daabase. 
+4 
+3 
+Rol\ tð, 
+Ccotemop 
++m nt 
+
+DaBa 
+befinitm 
+(amade 
+(DD) 
+bata be niti on 
+Osed to de Hne +he schea or stucture of daBaba se 
+are set of Cornmands aie R3 used to Crate, Update 
+amd selete struct o bB. 
+DDL 
+\hese 
+Conmand% 
+ae 
+mot 
+me 
+ant 
+fos 
+end 
+uses 
+bat 
+rther used 
+Ate 
+Tuneate 
+-Renme 
+baaba se 
+2 
+TA 
+S 
+Create table enplyee 
+Atsbute 
+Id fnt, 
+begnr 
+Hane archar (20) 
+Addess Vavhar (36) 
+RAN 
+TEUMCATe i Vsed for delefn 
+SA 
+RADHA 
+KRISH NAnUmA| 
+ATHRA 
+S1TA 
+Renorne 
+Vsed 
+tor 
+hangna 
+Aehdess 
+LLk 
+Crtatei-Used tor Cstalt tablR or database 
+ALTeR I Used tor modify the tabie. 
+DROP-Used for delete drop the tabie 
+DBA 
+os2le Symax 
+Sbuctee îs Cotaled 
+ALTER TABLE Employts 
+ADD 
+GmeBl 
+Vchr 
+1ot; 
+TRUMCAT TA8LE Employees 
+of taie 
+
+Data 
+manipulat'on 
+lomae 
+(bm) 
+standa tor bata manipadin lang 
+DML standa tor 
+Used to etieve fnto from Db. 
+extaind data. 
+Too types of Dm 
+ne data 
+Po ce dunl Dm1 hat data is meeded nd ha 
+DML Commands 
+Tnsert 
+Non Poce dul m -
+Updatt 
+Delete 
+delete wnoated data md mod 
+to get 5t, 
+Jata 
+lasy 4o learn, 
+ony 
+Oniy 
+hat 
+data 
+is 
+meeded,î 
+ia 
+proce dural, 
+wh the 
+database tableA 
+fethed tte daa 
+the 
+data 
+în 
+database 
+tables 
+Delete 
+Used 
+tes 
+delete 
+emor 
+the 
+from tne table 
+
+E-R 
+Model 
+Conept 
+{ 
+Gnhty-
+Retaionship 
+ntity 
+-
+Any 
+obiets 
+ohich 
+i 
+2 
+Student ( Rotl to, Ag, Addres ) 
+Enthy 
+fo 
+ex 
+Seppsse 
+too 
+nies 
+rihble 
+,e 
+stud 
+en 
+nd 
+Coe 
+both 
+enkHes 
+usll 
+b 
+pemted 
+att 
+Atrs bte 
+SUhema 
+Student shudy 
+the 
+Relaio 
+Student KStudy 
+phyieal etstence îs Caled ty 
+Types 
+of 
+Attri 
+bues 
+Relaonsàp 
+Popesty of n 
+Dr Cnepul stuture 
+Course 
+ensty 
+Ns 
+Composit 
+Atti 
+bates 
+9 
+Stored 
+Vs 
+Denved 
+Atibets 
+9 
+key 
+Vs 
+Hen 
+key 
+Atribtes 
+(6) 
+Reqpind s 
+Opboml 
+Atbaes 
+Abore 
+CR 
+model 
+i 
+fusther 
+Pnplemented 
+sith 
+Shukutd 
+Bueny 
+Cmguge 
+En hty 
+Atributes 
+(ourse (Cousse-jd, Cousse-Hamf, 
+Sehea r shruce 
+Studen 
+hane 
+sinte 
+Resishraim 
+Ho 
+but 
+mttiple 
+mob.mo 
+or 
+Addess 
+Goutste ipse 
+
+im E-R Model 
+bemed Athibf 
+Simple A Hhsbute 
+Atsbte)-
+Eept 
+key 
+ttbs 
+te ost 
+ton-ay 
+Atites 
+Studert_Hame 
+ConpasiR AHabek 
+Shtd Atbete 
+DOB 
+10) 
+Studemt 
+Reqtto 
+key 
+sthibutt 
+is 
+lusany 
+at 
+presented 
+uwith 
+mderline 
+(Plobto 
+Multald Attd bak 
+Het mam doy 
+Addrss, pOB, 
+Dersved 
+atbuts 
+t 
+eprt 
+semted 
+ss 
+doted 
+eipse 
+Cast me 
+Middietme 
+Fst_ttame 
+Cwnent 
+T  
+we 
+kmou 
+DOB 
+2 
+studems, 
+thn 
+we 
+deve 
+RoMto 
+key Ahaete 
+opo Atobtet 
+Reayitd Ats bese 
+the 
+attsbett rom dmotherr 
+DoB 
+Hotel ke 
+forea Studen. Hame 
+(uniqe valu) 
+Stored Atibute S Whih Ct b deed) 
+(omposi 
+Atibate 
+which 
+Can 
+be 
+terther 
+diide 
+Simple Athibude -hich cammot be bo ken o diwded fther 
+
+ndestine 
+eelipse 
+dotted 
+eipse 
+Hotaiens of e-R Datram 
+Diamond 
+Shepe 
+Attribukes 
+Key Atbutea 
+Compose 
+Atdbuts 
+fMusral«ed 
+AHibutes 
+Deived 
+Atibues 
+(Primany key ptsnt 
+weak Entity 
+Rdaisnshp 
+Links 
+set 
+tot prtsent) 
+( ink volth fatsty to fahty 
+énsy to Reonnip 
+Many to 
+Mamy 
+rMany 
+One 
+me to One 
+
+L’ To mantain 
+?) Pprtipa Hon enstraints 
+(asdinahcs 
+() ne to One 
+Sho easonship stats betuseen tnt hek of GnBty Se's. 
+Poatscipabo Constnnts 
+eis tence 
+MAPPIN G CONS TRINTS 
+of ensses och hare ehin oith notner ensk. 
+0 Tota! 
+2) One to Ma 
+paakn Constraints a 
+L AI| the enistseg of 
+P Many to one 
+eniy sot depends 
+-bs 
+Total 
+b 
+ba 
+toter tntity se iz Cayed Tota! 
+Poti cipahn Constnin 
+enby 
+one 
+set for its 
+Partial 
+nel ahn, aled 
+Patupation anstrint. 
+
+Adiess 
+nosj le to 
+TCustomert 
+PaHal 
+Pasticipasm 
+Tt 
+is 
+not 
+necessaj 
+double line 
+Abovt dia rom shoss Custemts Lo Relaisnship 
+Loon 
+that 
+-Total 
+ustomer of bamk bane taken loam, 
+7LPn totally depent upon Cus tomes eis ttnce, mes 
+
+Ktys 
+A key j a vae whch (an 
+sject instam ee. 
+Key ís used to 
+fom the table. 
+tables. 
+I 
+is 
+also 
+used 
+to 
+esta 
+blis 
+h 
+and 
+In the 
+Super ey 
+for 
+eul 
+Ib 
+is 
+used 
+as 
+a 
+in 
+the 
+studemt 
+table 
+be 
+cause 
+ft 
+is 
+Cni 
+aue 
+for 
+each 
+shudent. 
+persen table 
+ex! 
+in the 
+alys 
+be 
+used 
+to 
+esta 
+blish 
+and 
+sden 
+t 
+relamsNp 
+be 
+) pa55pvt -number, 
+Uunjoqe for each pensm. 
+S2 
+(sndrda te 
+key 
+Types of keys 
+ilke colek' 
+Ss 
+set. 
+O 
+Super 
+kay 
+i 
+A 
+super 
+key 
+ís 
+a 
+sct 
+of 
+ne 
+oT 
+more 
+atthhtta 
+that, 
+( S-Rottno, s-Mme, 
+~ 
+Jn Student table ith sttibue 
+Lic ense.nmber 
+key 
+S-Rollme, 
+alo us to 
+ne, S. Brnes, sYeor 
+S3 
+S-
+Rotlno, 
+S-\ear 
+S-Bramh 
+ot data 
+S. 
+Rolne, 
+S-
+None, 
+S-Brneh 
+between 
+Ss 
+S 
+Rollmo, 
+S.Brnh, 
+S.Yea 
+Conpasste 
+kays 
+Fo 
+(oncepts fn DBMS 
+
+STUPEHT TABLE 
+S-Roll . 
+S-Mant 
+" Tt must 
+for t 
+4 
+for eee 
+KAMAL 
+SATYAm 
+MAMR 
+KAMAL 
+Casdidate kay 
+Camdidate kay 
+Gndidate 
+key 
+The 
+mial 
+set 
+of 
+attributez 
+that 
+can 
+S.Banch 
+Contain nique value 
+(S-Rot1 to, 
+table 
+must 
+have 
+at 
+least 
+a 
+EE 
+Com 
+be 
+de 
+fe 
+a 
+he 
+minimm 
+In 
+stu 
+dent 
+table 
+ith 
+attsbte. 
+a 
+table. 
+i8 
+knon 
+Candidak 
+key, 
+S-tene 
+Cn be 
+C 
+’ 
+S, 
+Rollto. 
+defme 
+C’ 
+S-
+Roll 
+to 
+S_4ame 
+Serr 
+2001 
+that 
+i 
+hGsen 
+by 
+tthe 
+daabase 
+2003 
+2002 
+within 
+S-Brnh, S-Yea ) 
+dengner 
+(andidate 
+as the mimimm ne, 
+o Super ke 
+st. 
+(andidate key 
+duplieae vaus, it has uniqe vals, 
+primcipel 
+at a ime 
+Tn student table oith ats bwte S-Rotno, S-to, 5-Banh, 5-ye ) 
+that 
+idemtifes 
+the 
+ecord 
+amiqy 
+
+(4) 
+Composite 
+key 
+; 
+whener 
+a 
+Composite yeay .S-Rotno, SID 
+Foreign kuy 
+Thy 
+feritn ey 
+to the 
+h a suden table, wtha4 bw `-Remo, S-D, 3-Hame. 
+Roll to 
+2 
+A 
+he. me he 
+Jt Combjmes tuoo os more tlaions (table) at a me. 
+Kalash 
+Kame 
+primay 
+key 
+Consiss 
+of 
+he 
+StudetTle 1 
+pomykey 
+of 
+angter 
+tatbie. 
+12 
+(otumn 
+o4 
+the 
+table 
+used 
+to 
+key 
+Colum h ose Valee oe 
+Frst Table 
+Studen Tabie 2 
+34 
+Conposik 
+56 
+anothr tab1e 
+Act as 
+EE 
+S-mn 
+pint 
+Seeond Table 
+Lwen 
+Then 
+trat 
+atthibult 
+i% 
+(aled 
