@@ -14,7 +14,7 @@ export class CampaignStore {
         completedCalls: campaign.completedCalls,
         failedCalls: campaign.failedCalls,
         status: campaign.status,
-        leads: campaign.leads as unknown as Prisma.InputJsonValue,
+        leads: campaign.leads as any,
         startedAt: campaign.startedAt ? new Date(campaign.startedAt) : null,
         completedAt: campaign.completedAt
           ? new Date(campaign.completedAt)
@@ -32,7 +32,7 @@ export class CampaignStore {
         completedCalls: campaign.completedCalls,
         failedCalls: campaign.failedCalls,
         status: campaign.status,
-        leads: campaign.leads as unknown as Prisma.InputJsonValue,
+        leads: campaign.leads as any,
         startedAt: campaign.startedAt ? new Date(campaign.startedAt) : null,
         completedAt: campaign.completedAt
           ? new Date(campaign.completedAt)
