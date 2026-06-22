@@ -1,0 +1,24 @@
+{
+  "name": "@voice-ai/voice-service",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@voice-ai/database": "workspace:*",
+    "@voice-ai/shared": "workspace:*",
+    "ws": "^8.17.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.0",
+    "@types/uuid": "^9.0.8",
+    "@types/ws": "^8.5.10",
+    "tsx": "^4.9.0",
+    "typescript": "^5.4.5"
+  }
+}

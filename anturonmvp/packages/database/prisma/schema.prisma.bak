@@ -1,0 +1,291 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Multi-tenancy: Organizations
+model Organization {
+  id            String   @id @default(cuid())
+  name          String
+  slug          String   @unique
+  industry      String    // retail, real_estate, ecommerce, fintech, banking, other
+  region        String   @default("uae") // uae, saudi, india, other
+  plan          String   @default("free") // free, starter, growth, enterprise
+  settings      String?  @default("{}")
+  
+  // Branding
+  logoUrl       String?
+  primaryColor  String?  @default("#6366f1")
+  
+  // Billing
+  billingEmail  String?
+  billingPhone  String?
+  
+  // Status
+  isActive      Boolean  @default(true)
+  isVerified    Boolean  @default(false)
+  
+  // Relations
+  users         User[]
+  agents        VoiceAgent[]
+  calls         Call[]
+  webhooks      WebhookConfig[]
+  apiKeys       ApiKey[]
+  integrations  Integration[]
+  analytics     Analytics[]
+  
+  // Timestamps
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  @@index([slug])
+  @@index([industry])
+  @@index([region])
+  @@map("organizations")
+}
+
+model User {
+  id              String       @id @default(cuid())
+  email           String       @unique
+  name            String
+  role            String       @default("viewer") // super_admin, admin, agent, viewer
+  
+  // Organization (multi-tenancy)
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  // Profile
+  phoneNumber     String?
+  avatarUrl       String?
+  timezone        String?      @default("Asia/Dubai")
+  
+  // Auth
+  passwordHash    String?
+  emailVerified   Boolean      @default(false)
+  
+  // Status
+  isActive        Boolean      @default(true)
+  lastLoginAt     DateTime?
+  
+  // Relations
+  createdCalls    Call[]       @relation("CreatedBy")
+  
+  // Timestamps
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  
+  @@index([organizationId])
+  @@index([email])
+  @@map("users")
+}
+
+model VoiceAgent {
+  id              String        @id @default(cuid())
+  name            String
+  
+  // Organization
+  organizationId  String
+  organization    Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  // Configuration
+  type            String        @default("customer_support") // customer_support, lead_qualification, sales, appointment_booking, survey
+  language        String        @default("en") // en, ar, hi, ur, ta, te, bn
+  voiceId         String
+  
+  // AI Configuration
+  systemPrompt    String
+  welcomeMessage  String        // JSON string { language: message }
+  
+  // Knowledge base (URLs or document references)
+  knowledgeBase   String        @default("[]") // JSON array of strings
+  
+  // Call settings
+  maxDuration     Int           @default(600) // seconds
+  recordingEnabled   Boolean    @default(true)
+  transcriptionEnabled Boolean  @default(true)
+  handoffEnabled  Boolean       @default(true)
+  handoffPhone    String?
+  
+  // Webhook for call events
+  webhookUrl      String?
+  
+  // Industry template used (if any)
+  templateId      String?
+  
+  // Status
+  isActive        Boolean       @default(true)
+  
+  // Usage stats
+  totalCalls      Int           @default(0)
+  totalMinutes    Int           @default(0)
+  
+  // Relations
+  calls           Call[]
+  
+  // Timestamps
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  @@index([organizationId])
+  @@index([isActive])
+  @@map("voice_agents")
+}
+
+model Call {
+  id              String        @id @default(cuid())
+  
+  // Organization & Agent
+  organizationId  String
+  organization    Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  agentId         String
+  agent           VoiceAgent    @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  
+  // Customer info
+  customerPhone   String
+  customerName    String?
+  customerEmail   String?
+  
+  // Call metadata
+  direction       String        @default("inbound") // inbound, outbound
+  status          String        @default("queued") // queued, ringing, in_progress, completed, failed, busy, no_answer, voicemail, transferred
+  
+  // Timing
+  startedAt       DateTime      @default(now())
+  endedAt         DateTime?
+  duration        Int?          // seconds
+  
+  // Recording & Transcription
+  recordingUrl    String?
+  transcription   String?       // JSON array of { speaker, text, timestamp, confidence }
+  
+  // Analysis
+  sentiment       String?       // positive, neutral, negative
+  outcome         String?       // resolved, escalated, callback_scheduled, appointment_booked, sale_made, lead_qualified, unqualified, no_answer, voicemail_left
+  notes           String?
+  tags            String        @default("[]") // JSON array of strings
+  
+  // Metadata (custom fields per organization)
+  metadata        String?       @default("{}")
+  
+  // Cost tracking
+  cost            Float?        // in USD
+  
+  // Relations
+  createdById     String?
+  createdBy       User?         @relation("CreatedBy", fields: [createdById], references: [id])
+  
+  // Timestamps
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  @@index([organizationId])
+  @@index([agentId])
+  @@index([status])
+  @@index([customerPhone])
+  @@index([startedAt])
+  @@map("calls")
+}
+
+model WebhookConfig {
+  id              String        @id @default(cuid())
+  organizationId  String
+  organization    Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  url             String
+  secret          String?       // For HMAC signature
+  events          String        @default("[]") // JSON array of WebhookEvent
+  
+  isActive        Boolean       @default(true)
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  @@index([organizationId])
+  @@map("webhook_configs")
+}
+
+model ApiKey {
+  id              String        @id @default(cuid())
+  organizationId  String
+  organization    Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  name            String
+  keyHash         String        @unique
+  keyPrefix       String        // First 8 chars for display
+  
+  permissions     String        @default("[]") // JSON array of strings
+  
+  lastUsedAt      DateTime?
+  expiresAt       DateTime?
+  
+  isActive        Boolean       @default(true)
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  @@index([organizationId])
+  @@map("api_keys")
+}
+
+model Integration {
+  id              String        @id @default(cuid())
+  organizationId  String
+  organization    Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  type            String          // salesforce, hubspot, zoho, slack, zendesk, freshdesk, custom_crm, twilio, exotel, messagebird
+  name            String
+  config          String        @default("{}") // JSON object
+  
+  isActive        Boolean       @default(true)
+  lastSyncAt      DateTime?
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  @@index([organizationId])
+  @@index([type])
+  @@map("integrations")
+}
+
+model Analytics {
+  id              String        @id @default(cuid())
+  organizationId  String
+  organization    Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  period          String        // 'day', 'week', 'month'
+  date            String          // YYYY-MM-DD format
+  
+  // Metrics
+  totalCalls      Int           @default(0)
+  completedCalls  Int           @default(0)
+  failedCalls     Int           @default(0)
+  avgDuration     Float         @default(0)
+  avgResponseTime Float         @default(0)
+  
+  // Sentiment breakdown
+  positiveSentiment Int         @default(0)
+  neutralSentiment  Int         @default(0)
+  negativeSentiment Int         @default(0)
+  
+  // Outcomes
+  outcomeBreakdown String        @default("{}") // JSON object
+  
+  // Tags
+  topTags         String        @default("[]") // JSON array
+  
+  // Cost
+  cost            Float         @default(0)
+  
+  createdAt       DateTime      @default(now())
+  
+  @@unique([organizationId, period, date])
+  @@index([organizationId])
+  @@index([date])
+  @@map("analytics")
+}
+
+// Note: Enums are stored as String in SQLite with validation at application level

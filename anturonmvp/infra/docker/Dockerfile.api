@@ -1,0 +1,52 @@
+FROM node:20-alpine AS base
+
+# Install pnpm
+RUN npm install -g pnpm
+
+FROM base AS builder
+
+WORKDIR /app
+
+# Copy workspace files
+COPY package.json pnpm-workspace.yaml turbo.json ./
+
+# Copy package files
+COPY packages/database/package.json ./packages/database/
+COPY packages/shared/package.json ./packages/shared/
+COPY apps/api/package.json ./apps/api/
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+
+# Copy source code
+COPY packages/database/ ./packages/database/
+COPY packages/shared/ ./packages/shared/
+COPY apps/api/ ./apps/api/
+
+# Build packages
+RUN pnpm --filter @voice-ai/database db:generate
+RUN pnpm --filter @voice-ai/shared build
+RUN pnpm --filter @voice-ai/database build
+RUN pnpm --filter @voice-ai/api build
+
+FROM base AS runner
+
+WORKDIR /app
+
+# Don't run production as root
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 api
+USER api
+
+# Copy built application
+COPY --from=builder --chown=api:nodejs /app/apps/api/dist ./dist
+COPY --from=builder --chown=api:nodejs /app/apps/api/package.json ./
+COPY --from=builder --chown=api:nodejs /app/packages ./packages
+COPY --from=builder --chown=api:nodejs /app/node_modules ./node_modules
+
+EXPOSE 3001
+
+ENV NODE_ENV=production
+ENV PORT=3001
+
+CMD ["node", "dist/index.js"]
