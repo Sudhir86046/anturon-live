@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://35.168.16.223';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://35.168.16.223:5000';
 
 export interface User {
   id: string;
@@ -36,83 +36,55 @@ export class ApiClient {
 
   setToken(token: string) {
     this.token = token;
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('token', token);
-    }
+    if (typeof window !== 'undefined') localStorage.setItem('token', token);
   }
 
   clearToken() {
     this.token = null;
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('token');
-    }
+    if (typeof window !== 'undefined') localStorage.removeItem('token');
   }
 
-  async fetch(path: string, options: RequestInit = {}) {
-    // Always re-read from localStorage — the in-memory token can go stale
-    // when AuthProvider clears it or when the module was loaded before login
+  private getHeaders(isFormData = false): Record<string, string> {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('token');
       if (stored) this.token = stored;
     }
 
-    const url = `${API_URL}/api/trpc${path}`;
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-      ...((options.headers as Record<string, string>) || {}),
-    };
+    const headers: Record<string, string> = isFormData ? {} : { 'Content-Type': 'application/json' };
 
-    if (this.token) {
-      headers['Authorization'] = `Bearer ${this.token}`;
-    }
+    if (this.token) headers.Authorization = `Bearer ${this.token}`;
 
-    try {
-      const response = await fetch(url, {
-        ...options,
-        headers,
-      });
-
-      if (!response.ok) {
-        const error = await response.json().catch(() => ({ message: 'Unknown error' }));
-        throw new Error(error.message || `HTTP ${response.status}`);
-      }
-
-      return response.json();
-    } catch (err: any) {
-      if (err.name === 'TypeError' && err.message === 'Failed to fetch') {
-        throw new Error('Cannot connect to server. Please make sure the API is running on http://localhost:3001');
-      }
-      throw err;
-    }
+    return headers;
   }
 
   async rest(path: string, options: RequestInit = {}) {
+    const isFormData = options.body instanceof FormData;
+
     const response = await fetch(`${API_URL}${path}`, {
       ...options,
       headers: {
-        ...(options.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
+        ...this.getHeaders(isFormData),
         ...((options.headers as Record<string, string>) || {}),
       },
     });
 
+    const data = await response.json().catch(() => ({}));
+
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ error: 'Unknown error' }));
-      throw new Error(error.error || error.message || `HTTP ${response.status}`);
+      throw new Error(data.error || data.message || `HTTP ${response.status}`);
     }
 
-    return response.json();
+    return data;
   }
 
-  // Auth endpoints
   async login(email: string, password: string): Promise<AuthResponse> {
-    const result = await this.fetch('/auth.login', {
+    const data = await this.rest('/auth/login', {
       method: 'POST',
-      body: JSON.stringify({ json: { email, password } }),
+      body: JSON.stringify({ email, password }),
     });
 
-    const response = result.result.data.json;
-    this.setToken(response.token);
-    return response;
+    this.setToken(data.token);
+    return data;
   }
 
   async register(data: {
@@ -124,79 +96,83 @@ export class ApiClient {
     adminPassword: string;
     phone?: string;
   }): Promise<AuthResponse> {
-    const result = await this.fetch('/auth.register', {
+    const result = await this.rest('/auth/register', {
       method: 'POST',
-      body: JSON.stringify({ json: data }),
+      body: JSON.stringify(data),
     });
 
-    const response = result.result.data.json;
-    this.setToken(response.token);
-    return response;
+    this.setToken(result.token);
+    return result;
   }
 
   async getMe(): Promise<{ user: User; organization: Organization }> {
-    const result = await this.fetch('/auth.me', {
-      method: 'GET',
-    });
-
-    return result.result.data.json;
+    return this.rest('/auth/me', { method: 'GET' });
   }
 
-  // Agents endpoints
   async getAgents(): Promise<any[]> {
     const result = await this.rest('/agents');
     return result.agents || [];
   }
 
   async createAgent(data: any): Promise<any> {
-    const result = await this.fetch('/agents.create', {
+    return this.rest('/agents', {
       method: 'POST',
-      body: JSON.stringify({ json: data }),
+      body: JSON.stringify(data),
     });
-
-    return result.result.data.json;
   }
 
-  // Calls endpoints
+  async getAgent(id: string): Promise<any> {
+    const result = await this.rest(`/agents/${id}`);
+    return result.agent;
+  }
+
+  async updateAgent(id: string, data: any): Promise<any> {
+    const result = await this.rest(`/agents/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+    return result.agent;
+  }
+
+  async deleteAgent(id: string): Promise<any> {
+    return this.rest(`/agents/${id}`, { method: 'DELETE' });
+  }
+
   async getCalls(): Promise<any[]> {
-    try {
-      const result = await this.rest('/calls');
-      return result.calls || [];
-    } catch {
-      return [];
-    }
+    const result = await this.rest('/calls');
+    return result.calls || [];
   }
 
-  // Analytics endpoints
   async getDashboardStats(): Promise<any> {
     const result = await this.rest('/dashboard/stats');
     const stats = result.stats || {};
-
     return {
-      month: {
-        calls: stats.totalCalls || 0,
-        minutes: 0,
-      },
-      week: {
-        calls: stats.completedCalls || 0,
-      },
+      month: { calls: stats.totalCalls || 0, minutes: 0 },
+      week: { calls: stats.completedCalls || 0 },
       raw: stats,
     };
   }
 
-  async initiateCall(data: { assistantId: string; phoneNumber: string; customerName?: string; phoneNumberId?: string }): Promise<any> {
-    const result = await this.fetch('/calls.initiate', {
-      method: 'POST',
-      body: JSON.stringify({ json: data }),
+  async getTimeSeries(days = 30): Promise<any[]> {
+    const calls = await this.getCalls();
+    const map: Record<string, number> = {};
+
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      map[d.toISOString().slice(0, 10)] = 0;
+    }
+
+    calls.forEach((call: any) => {
+      const date = call.startedAt ? new Date(call.startedAt).toISOString().slice(0, 10) : null;
+      if (date && map[date] !== undefined) map[date] += 1;
     });
-    return result.result.data.json;
+
+    return Object.entries(map).map(([date, calls]) => ({ date, calls }));
   }
 
-  async getTimeSeries(days = 30): Promise<any[]> {
-    const result = await this.fetch(`/analytics.timeSeries?input=${encodeURIComponent(JSON.stringify({ json: { days } }))}`, {
-      method: 'GET',
-    });
-    return result.result.data.json;
+  async initiateCall(): Promise<any> {
+    throw new Error('Real outbound calling is disabled until telephony config is active.');
   }
 }
 
